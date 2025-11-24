@@ -1,15 +1,23 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 import { CourseStore } from '../../stores/course.store';
 
 @Component({
   selector: 'app-course-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, NgIf],
+  imports: [
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ],
   templateUrl: './course-form.component.html'
 })
 export class CourseFormComponent implements OnChanges {
@@ -17,26 +25,33 @@ export class CourseFormComponent implements OnChanges {
   @Output() saved = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 
-  form!: FormGroup;
+  private fb = inject(FormBuilder);
+  private store = inject(CourseStore);
 
-  constructor(private fb: FormBuilder, private store: CourseStore) {
-    this.form = this.fb.group({
-      id: [],
-      code: ['', Validators.required],
-      name: ['', Validators.required]
-    });
-  }
+  form: FormGroup = this.fb.group({
+    id: [null],
+    code: ['', Validators.required],
+    name: ['', Validators.required]
+  });
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['model'] && this.model) {
-      this.form.reset(this.model || { id: null, code: '', name: '' });
+    if (changes['model']) {
+      this.form.reset(this.model ?? { id: null, code: '', name: '' });
     }
   }
 
-  submit() {
+  submit(): void {
     const body = this.form.value;
     if (!body) return;
-    const save$ = body.id ? this.store.update(body.id, body) : this.store.create(body);
-    save$.subscribe(() => this.saved.emit());
+
+    const op$ = body.id
+      ? this.store.update(body.id, body)
+      : this.store.create(body);
+
+    op$.subscribe(() => this.saved.emit());
+  }
+
+  onCancel(): void {
+    this.cancelled.emit();
   }
 }
