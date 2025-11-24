@@ -1,0 +1,2 @@
+.form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.actions { grid-column: 1 / -1; display: flex; gap: 8px; }

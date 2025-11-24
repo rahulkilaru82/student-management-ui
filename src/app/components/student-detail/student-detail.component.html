@@ -1,0 +1,75 @@
+<div *ngIf="errorMsg" class="tw-text-red-600 tw-mb-3">{{ errorMsg }}</div>
+
+<a routerLink="/students" class="tw-text-sm tw-text-blue-700">&larr; Back to Students</a>
+
+<h2 class="tw-text-2xl tw-font-semibold tw-mt-2 tw-mb-4">Student Details</h2>
+
+
+<div class="tw-border tw-rounded-xl tw-p-4 tw-mb-6">
+  <div class="tw-text-lg tw-font-medium">
+    {{ student?.firstName }} {{ student?.lastName }}
+  </div>
+  <div class="tw-text-sm tw-text-gray-600">
+    Email: {{ student?.email || '—' }}
+  </div>
+  <div class="tw-text-sm tw-text-gray-600">
+    Birth Date: {{ student?.birthDate || '—' }}
+  </div>
+</div>
+
+
+<h3 class="tw-text-xl tw-font-semibold tw-mb-2">Enrollments</h3>
+
+<div *ngIf="!enrollments.length" class="tw-text-sm tw-text-gray-600 tw-mb-3">
+  No courses yet.
+</div>
+
+<div class="tw-overflow-x-auto tw-mb-6">
+  <table class="tw-min-w-[600px] tw-w-full tw-border-collapse">
+    <thead>
+      <tr class="tw-text-left">
+        <th class="tw-border-b tw-py-2">Code</th>
+        <th class="tw-border-b tw-py-2">Course</th>
+        <th class="tw-border-b tw-py-2">Grade</th>
+        <th class="tw-border-b tw-py-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of enrollments">
+        <td class="tw-border-b tw-py-2">{{ e.code }}</td>
+        <td class="tw-border-b tw-py-2">{{ e.name }}</td>
+        <td class="tw-border-b tw-py-2">
+          <input
+            class="tw-border tw-rounded tw-px-2 tw-py-1"
+            [value]="currentGradeFor(e)"
+            (input)="editedGrades[e.courseId] = $any($event.target).value"
+            placeholder="e.g. A+, 85, Pass"
+            style="width: 160px;"
+          />
+        </td>
+        <td class="tw-border-b tw-py-2">
+          <button class="tw-bg-blue-600 tw-text-white tw-rounded tw-px-3 tw-py-1 tw-mr-2"
+                  (click)="saveGrade(e)">Save</button>
+          <button class="tw-bg-red-600 tw-text-white tw-rounded tw-px-3 tw-py-1"
+                  (click)="unenroll(e)">Unenroll</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<h3 class="tw-text-xl tw-font-semibold tw-mb-2">Enroll in a Course</h3>
+<div class="tw-flex tw-items-center tw-gap-3">
+  <select class="tw-border tw-rounded tw-px-2 tw-py-2" [(ngModel)]="selectedCourseId">
+    <option [ngValue]="null">Select a course</option>
+    <option *ngFor="let c of availableCourses" [ngValue]="c.id">{{ c.code }} — {{ c.name }}</option>
+  </select>
+  <button class="tw-bg-green-600 tw-text-white tw-rounded tw-px-3 tw-py-2"
+          (click)="enroll()" [disabled]="!selectedCourseId">Enroll</button>
+</div>
+
+
+<div *ngIf="loading" class="tw-text-sm tw-text-gray-600 tw-mt-4">
+  Working...
+</div>

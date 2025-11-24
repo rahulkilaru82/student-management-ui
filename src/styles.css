@@ -1,0 +1,6 @@
+
+html, body { height: 100%; margin: 0; }
+app-root, .page { display: block; padding: 16px; }
+.table-actions button { margin-right: 4px; }
+.toolbar-spacer { flex: 1 1 auto; }
+.container { max-width: 1000px; margin: 0 auto; }

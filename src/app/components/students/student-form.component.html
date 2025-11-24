@@ -1,0 +1,41 @@
+<h2 mat-dialog-title class="sf-title">
+  <mat-icon>person</mat-icon>
+  {{ title }}
+</h2>
+
+<div mat-dialog-content class="sf-content">
+  <form [formGroup]="form" class="sf-grid" (ngSubmit)="save()">
+    <mat-form-field appearance="fill">
+      <mat-label>First name</mat-label>
+      <input matInput formControlName="firstName" />
+      <mat-error *ngIf="form.controls.firstName.hasError('required')">Required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Last name</mat-label>
+      <input matInput formControlName="lastName" />
+      <mat-error *ngIf="form.controls.lastName.hasError('required')">Required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="sf-full">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+      <mat-error *ngIf="form.controls.email.hasError('required')">Required</mat-error>
+      <mat-error *ngIf="form.controls.email.hasError('email')">Invalid email</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Date of birth</mat-label>
+      <input matInput type="date" formControlName="birthDate" />
+      <mat-error *ngIf="form.controls.birthDate.hasError('required')">Required</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end" class="sf-actions">
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="saving" (click)="save()">
+    <mat-icon style="margin-right:6px;">save</mat-icon>
+    Save
+  </button>
+</div>

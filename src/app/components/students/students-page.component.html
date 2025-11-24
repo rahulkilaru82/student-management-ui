@@ -1,0 +1,50 @@
+<div style="display:flex; align-items:center; justify-content:space-between; margin:0 0 12px;">
+  <h2 style="margin:0; font-weight:600;">Students</h2>
+  <button mat-raised-button color="primary" type="button" (click)="create()">
+    <mat-icon style="margin-right:6px;">add</mat-icon>
+    New Student
+  </button>
+</div>
+
+<table mat-table [dataSource]="(students$ | async) ?? []" class="mat-elevation-z1" style="width:100%">
+
+  <ng-container matColumnDef="firstName">
+    <th mat-header-cell *matHeaderCellDef> First Name </th>
+    <td mat-cell *matCellDef="let s"> {{ s.firstName }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="lastName">
+    <th mat-header-cell *matHeaderCellDef> Last Name </th>
+    <td mat-cell *matCellDef="let s"> {{ s.lastName }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef> Email </th>
+    <td mat-cell *matCellDef="let s"> {{ s.email || '—' }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef style="text-align:right;"> Actions </th>
+    <td mat-cell *matCellDef="let s" style="text-align:right;">
+      <button mat-icon-button color="primary" type="button" (click)="edit(s)" title="Edit">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" type="button" (click)="manage(s)" title="Manage Courses">
+        <mat-icon>school</mat-icon>
+      </button>
+      <button mat-icon-button color="accent" type="button" (click)="openEnroll(s)" title="Enroll">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" type="button" (click)="remove(s)" title="Delete">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<div *ngIf="((students$ | async) ?? []).length === 0" style="opacity:.7; margin-top:12px;">
+  No students yet.
+</div>
