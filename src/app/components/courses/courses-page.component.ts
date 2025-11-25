@@ -4,7 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { CourseFormComponent } from './course-form.component';
+import { CourseFormComponent } from '.';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { CourseStore } from '../../stores/course.store';
 
@@ -19,14 +19,12 @@ import { CourseStore } from '../../stores/course.store';
   templateUrl: './courses-page.component.html'
 })
 export class CoursesPageComponent {
-  // This already matches your courses-page.component.html
   displayedColumns = ['code', 'name', 'actions'];
 
   editing: any = null;
   rows$ = this.store.rows$;
 
   constructor(private store: CourseStore, private dialog: MatDialog) {
-    // initial load
     this.store.load().subscribe();
   }
 

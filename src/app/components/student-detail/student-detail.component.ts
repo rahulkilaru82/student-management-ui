@@ -18,8 +18,7 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
   enrollments: StudentCourseDto[] = [];
   availableCourses: Course[] = [];
 
-  // UI state
-  editedGrades: Record<number, string | null> = {}; // key = courseId
+  editedGrades: Record<number, string | null> = {}; 
   selectedCourseId: number | null = null;
   loading = false;
   errorMsg = '';
@@ -50,7 +49,6 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  // ------- Loaders -------
   loadAll(): void {
     this.errorMsg = '';
     this.loading = true;
@@ -66,13 +64,11 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
     this.api.listCourses(this.studentId).subscribe({
       next: list => {
         this.enrollments = list || [];
-        // reset edited map for rows not present anymore
         const present = new Set(this.enrollments.map(e => e.courseId));
         Object.keys(this.editedGrades).forEach(k => {
           const cid = Number(k);
           if (!present.has(cid)) delete this.editedGrades[cid];
         });
-        // after enrollments arrive, load available
         this.loadAvailable();
       },
       error: e => {
@@ -98,7 +94,6 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ------- Actions -------
   enroll(): void {
     if (!this.selectedCourseId) return;
     this.loading = true;
@@ -117,7 +112,7 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
 
   saveGrade(row: StudentCourseDto): void {
     const courseId = row.courseId;
-    const grade = this.editedGrades[courseId] ?? row.grade ?? null; // keep existing if untouched
+    const grade = this.editedGrades[courseId] ?? row.grade ?? null;
     this.loading = true;
 
     this.api.setGrade(this.studentId, courseId, grade === '' ? null : grade).subscribe({
@@ -146,7 +141,6 @@ export class StudentDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  // helpers for grade field
   currentGradeFor(row: StudentCourseDto): string {
     const pending = this.editedGrades[row.courseId];
     return pending !== undefined ? (pending ?? '') : (row.grade ?? '');

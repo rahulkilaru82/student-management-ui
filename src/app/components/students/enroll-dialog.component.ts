@@ -20,9 +20,7 @@ export interface EnrollmentDialogData {
   selector: 'app-enrollment-dialog',
   standalone: true,
   imports: [
-    // Angular
     NgIf, NgFor, ReactiveFormsModule,
-    // Material
     MatDialogModule, MatFormFieldModule, MatSelectModule, MatButtonModule,
     MatIconModule, MatListModule, MatInputModule
   ],
@@ -30,7 +28,6 @@ export interface EnrollmentDialogData {
     <h2 mat-dialog-title>Enroll in Course</h2>
 
     <div mat-dialog-content style="width:560px;max-width:100%;">
-      <!-- CURRENT ENROLLMENTS (with text grade) -->
       <section class="tw-mb-6">
         <h3 class="tw-text-base tw-font-semibold tw-mb-2">Current Enrollments</h3>
 
@@ -42,7 +39,6 @@ export interface EnrollmentDialogData {
                 <div class="tw-text-sm tw-text-gray-600">Grade: {{ e.grade || '—' }}</div>
               </div>
 
-              <!-- Free-text grade input -->
               <mat-form-field appearance="outline" style="width: 160px;">
                 <mat-label>Grade</mat-label>
                 <input
@@ -80,7 +76,6 @@ export interface EnrollmentDialogData {
         </ng-template>
       </section>
 
-      <!-- ENROLL NEW COURSE -->
       <section>
         <h3 class="tw-text-base tw-font-semibold tw-mb-2">Enroll in a Course</h3>
 
@@ -110,7 +105,6 @@ export class EnrollmentDialogComponent implements OnInit {
   enrolled: StudentCourseDto[] = [];
   available: Course[] = [];
 
-  /** temp grade edits keyed by "studentId-courseId" */
   private pendingGrade = new Map<string, string | null>();
 
   constructor(
@@ -125,7 +119,6 @@ export class EnrollmentDialogComponent implements OnInit {
     this.reload();
   }
 
-  /** Helpers */
   private keyOf(e: StudentCourseDto) { return `${this.data.studentId}-${e.courseId}`; }
   hasPending(e: StudentCourseDto) { return this.pendingGrade.has(this.keyOf(e)); }
   getPendingGrade(e: StudentCourseDto) {
@@ -133,13 +126,11 @@ export class EnrollmentDialogComponent implements OnInit {
     return this.pendingGrade.has(k) ? (this.pendingGrade.get(k) ?? '') : (e.grade ?? '');
   }
 
-  /** Load enrolled + available lists */
   private reload(): void {
     const sid = Number(this.data.studentId);
     this.api.listCourses(sid).subscribe({
       next: (list) => {
         this.enrolled = list || [];
-        // drop pending for rows that disappeared
         const keys = new Set(this.enrolled.map(e => this.keyOf(e)));
         Array.from(this.pendingGrade.keys()).forEach(k => { if (!keys.has(k)) this.pendingGrade.delete(k); });
       },
@@ -148,7 +139,6 @@ export class EnrollmentDialogComponent implements OnInit {
 
     this.api.listAvailableCourses().subscribe({
       next: (courses) => {
-        // Filter out already enrolled
         const enrolledIds = new Set(this.enrolled.map(e => e.courseId));
         this.available = (courses || []).filter(c => !enrolledIds.has(c.id!));
       },
@@ -158,7 +148,6 @@ export class EnrollmentDialogComponent implements OnInit {
     this.form.reset({ courseId: null });
   }
 
-  /** Enroll action via POST /api/enrollments */
   enroll(): void {
     const sid = Number(this.data.studentId);
     const cid = Number(this.form.value.courseId);
@@ -170,14 +159,11 @@ export class EnrollmentDialogComponent implements OnInit {
     });
   }
 
-  /** Track text input locally */
   onGradeInput(e: StudentCourseDto, value: string) {
     const key = this.keyOf(e);
-    // Allow empty string to clear grade (null on server)
     this.pendingGrade.set(key, value === '' ? null : value);
   }
 
-  /** Persist grade via PATCH /api/enrollments/grade */
   saveGrade(e: StudentCourseDto) {
     const key = this.keyOf(e);
     if (!this.pendingGrade.has(key)) return;
@@ -192,7 +178,6 @@ export class EnrollmentDialogComponent implements OnInit {
     });
   }
 
-  /** Unenroll via DELETE /api/enrollments?studentId=&courseId= */
   doUnenroll(e: StudentCourseDto) {
     const ref = this.dialog.open(ConfirmDialogComponent, { data: { message: `Remove ${e.code}?` }});
     ref.afterClosed().subscribe(ok => {

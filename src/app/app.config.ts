@@ -4,7 +4,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { provideNativeDateAdapter } from '@angular/material/core';   // <-- add this
+import { provideNativeDateAdapter } from '@angular/material/core';  
 import { httpErrorInterceptor } from './services/interceptors/http-error.interceptor';
 
 export const appConfig: ApplicationConfig = {

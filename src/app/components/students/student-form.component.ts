@@ -20,7 +20,6 @@ import { StudentStore } from '../../stores/student.store';
     MatButtonModule, MatIconModule
   ],
   templateUrl: './student-form.component.html',
-  // inline styles so no .scss file is needed
   styles: [`
     .sf-title { display:flex; align-items:center; gap:8px; margin:0; }
     .sf-content { padding-top:4px; }

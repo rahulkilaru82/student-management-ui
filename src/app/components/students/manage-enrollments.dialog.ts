@@ -6,10 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { AsyncPipe, NgIf, NgFor } from '@angular/common';
 
-// ✅ fixed: use relative barrel import (no @app alias)
 import { StudentService, CourseService, Course, Student } from '../../services/http';
 
-// ✅ fixed: use relative path (no @app alias)
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
