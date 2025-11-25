@@ -17,7 +17,7 @@ export const routes: Routes = [
   {
     path: 'students/:id',
     loadComponent: () =>
-      import('./components/studinent-detail/student-detail.component')
+      import('./components/student-detail/student-detail.component')
         .then(m => m.StudentDetailComponent),
   },
   { path: '**', redirectTo: 'students' }];
