@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 import { StudentStore } from '../../stores/student.store';
-import { EnrollmentDialogComponent } from './enroll-dialog.component';
 import { StudentFormComponent } from './student-form.component';
 
 @Component({
@@ -61,12 +60,6 @@ export class StudentsPageComponent implements OnInit {
   manage(s: { id: number }) {
     if (!s?.id) return;
     this.router.navigate(['/students', s.id]);
-  }
-
-  openEnroll(s: { id: number }) {
-    if (!s?.id) return;
-    const ref = this.dialog.open(EnrollmentDialogComponent, { data: { studentId: s.id } });
-    ref.afterClosed().subscribe(() => this.store.load().subscribe());
   }
 
   remove(s: { id: number }) {
